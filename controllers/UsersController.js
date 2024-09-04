@@ -3,11 +3,11 @@ import dbClient from '../utils/db';
 
 class users {
   static async postNew(request, response) {
-    if (!request.body.hasOwnProperty.call('email')) {
+    if (!request.body.hasOwnProperty('email')) {
       response.status(400).json({ error: 'Missing email' });
     }
 
-    if (!request.body.hasOwnProperty.call('password')) {
+    if (!request.body.hasOwnProperty('password')) {
       response.status(400).json({ error: 'Missing password' });
     }
 
