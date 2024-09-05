@@ -10,7 +10,7 @@ router.get('/status', AppController.getStatus);
 router.get('/stats', AppController.getStats);
 router.post('/users', UsersController.postNew);
 router.get('/connect', Auth.getConnect);
-router.get('/disconnect', UsersController.signOut);
-router.get('/users/me', UsersController.retrieveUser);
+router.get('/disconnect', UsersController.getDisconnect);
+router.get('/users/me', UsersController.getMe);
 
 export default router;

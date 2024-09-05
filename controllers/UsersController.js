@@ -32,7 +32,7 @@ class users {
     }
   }
 
-  static async signOut(request, response) {
+  static async getDisconnect(request, response) {
     const XToken = request.headers['x-token'];
     if (XToken === null) {
       response.status(401).json({ error: 'Unathorized' });
@@ -53,7 +53,7 @@ class users {
     }
   }
 
-  static async retrieveUser(request, response) {
+  static async getMe(request, response) {
     const XToken = request.headers['x-token'];
     if (XToken === null) {
       response.status(401).json({ error: 'Unathorized' });
