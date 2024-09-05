@@ -1,7 +1,7 @@
 import express, { Router } from 'express';
 import AppController from '../controllers/AppController';
 import UsersController from '../controllers/UsersController';
-import Auth from '../controllers/AuthController';
+import AuthController from '../controllers/AuthController';
 
 const router = Router();
 
@@ -9,8 +9,8 @@ router.use(express.json());
 router.get('/status', AppController.getStatus);
 router.get('/stats', AppController.getStats);
 router.post('/users', UsersController.postNew);
-router.get('/connect', Auth.getConnect);
-router.get('/disconnect', UsersController.getDisconnect);
+router.get('/connect', AuthController.getConnect);
+router.get('/disconnect', AuthController.getDisconnect);
 router.get('/users/me', UsersController.getMe);
 
 export default router;

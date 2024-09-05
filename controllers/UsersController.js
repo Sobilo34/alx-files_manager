@@ -32,27 +32,6 @@ class users {
     }
   }
 
-  static async getDisconnect(request, response) {
-    const XToken = request.headers['x-token'];
-    if (XToken === null) {
-      response.status(401).json({ error: 'Unathorized' });
-      return;
-    }
-    const key = `auth_${XToken}`;
-    const id = redisClient.get(key);
-    if (!id) {
-      response.status(401).json({ error: 'Unathorized' });
-    } else {
-      const user = dbClient.db.collection('users').findOne({ _id: ObjectId(id) });
-      if (user) {
-        await redisClient.del(key);
-        response.status(204);
-      } else {
-        response.status(401).json({ error: 'Unathorized' });
-      }
-    }
-  }
-
   static async getMe(request, response) {
     const XToken = request.headers['x-token'];
     if (XToken === null) {

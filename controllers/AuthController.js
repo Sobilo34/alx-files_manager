@@ -2,7 +2,7 @@ import { v4 } from 'uuid';
 import dbClient from '../utils/db';
 import redisClient from '../utils/redis';
 
-class Auth {
+class AuthController {
   static async getConnect(request, response) {
     const { authorization } = request.headers;
 
@@ -23,6 +23,27 @@ class Auth {
       response.status(200).json({ token: randomStr });
     }
   }
+
+  static async getDisconnect(request, response) {
+    const XToken = request.headers['x-token'];
+    if (XToken === null) {
+      response.status(401).json({ error: 'Unathorized' });
+      return;
+    }
+    const key = `auth_${XToken}`;
+    const id = redisClient.get(key);
+    if (!id) {
+      response.status(401).json({ error: 'Unathorized' });
+    } else {
+      const user = dbClient.db.collection('users').findOne({ _id: ObjectId(id) });
+      if (user) {
+        await redisClient.del(key);
+        response.status(204);
+      } else {
+        response.status(401).json({ error: 'Unathorized' });
+      }
+    }
+  }
 }
 
-export default Auth;
+export default AuthController;
