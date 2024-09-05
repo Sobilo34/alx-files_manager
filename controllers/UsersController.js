@@ -20,7 +20,6 @@ class users {
         const pwdResult = hash.digest('hex');
 
         const con = await dbClient.db.collection('users').insertOne({ email, password: pwdResult });
-        console.log(con);
         const { ops } = con;
         const id = ops[0]._id;
 
