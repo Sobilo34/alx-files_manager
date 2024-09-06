@@ -1,5 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { v4 } from 'uuid';
+import crypto from 'crypto';
 import dbClient from '../utils/db';
 import redisClient from '../utils/redis';
 
@@ -13,15 +14,20 @@ class AuthController {
 
     const user = await dbClient.db.collection('users').findOne({ email });
 
-    if (!user && !password) {
+    if (!user && !email && !password) {
       response.status(401).json({ error: 'Unauthorized' });
     } else {
-      const randomStr = v4();
-      const key = `auth_${randomStr}`;
-
-      const id = user._id;
-      redisClient.set(key, id.toString(), 24 * 60 * 60);
-      response.status(200).json({ token: randomStr });
+      const hashed_password = crypto.createHash('sha1').update(password).digest('hex');
+      if (hashed_password === user.password) {
+        const randomStr = v4();
+        const key = `auth_${randomStr}`;
+  
+        const id = user._id;
+        redisClient.set(key, id.toString(), 24 * 60 * 60);
+        response.status(200).json({ token: randomStr });
+      } else {
+        response.status(401).json({ error: 'Unauthorized' });
+      }
     }
   }
 
