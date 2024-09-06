@@ -20,7 +20,7 @@ class AuthController {
       const key = `auth_${randomStr}`;
 
       const id = user._id;
-      redisClient.set(key, id.toString(), 24000 * 60 * 60);
+      redisClient.set(key, id.toString(), 24 * 60 * 60);
       response.status(200).json({ token: randomStr });
     }
   }
