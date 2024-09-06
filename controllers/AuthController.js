@@ -32,14 +32,14 @@ class AuthController {
       return;
     }
     const key = `auth_${XToken}`;
-    const id = redisClient.get(key);
+    const id = await redisClient.get(key);
     if (!id) {
       response.status(401).json({ error: 'Unathorized' });
     } else {
-      const user = dbClient.db.collection('users').findOne({ _id: ObjectId(id) });
+      const user = await dbClient.db.collection('users').findOne({ _id: new ObjectId(id) });
       if (user) {
         await redisClient.del(key);
-        response.status(204);
+        response.status(204).end();
       } else {
         response.status(401).json({ error: 'Unathorized' });
       }
