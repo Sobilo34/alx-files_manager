@@ -8,6 +8,11 @@ class AuthController {
   static async getConnect(request, response) {
     const { authorization } = request.headers;
 
+    if (!authorization) {
+      response.status(401).json({ error: 'Unathorized' })
+      return;
+    }
+
     const encondedAuth = authorization.split(' ')[1];
     const emailPwd = Buffer.from(encondedAuth, 'base64').toString('utf-8');
     const [email, password] = emailPwd.split(':');
