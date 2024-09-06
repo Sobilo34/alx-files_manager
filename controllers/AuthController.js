@@ -9,7 +9,7 @@ class AuthController {
     const { authorization } = request.headers;
 
     if (!authorization) {
-      response.status(401).json({ error: 'Unathorized' })
+      response.status(401).json({ error: 'Unathorized' });
       return;
     }
 
@@ -22,11 +22,11 @@ class AuthController {
     if (!user || !email || !password) {
       response.status(401).json({ error: 'Unauthorized' });
     } else {
-      const hashed_password = crypto.createHash('sha1').update(password).digest('hex');
-      if (hashed_password === user.password) {
+      const hashedPassword = crypto.createHash('sha1').update(password).digest('hex');
+      if (hashedPassword === user.password) {
         const randomStr = v4();
         const key = `auth_${randomStr}`;
-  
+
         const id = user._id;
         redisClient.set(key, id.toString(), 24 * 60 * 60);
         response.status(200).json({ token: randomStr });
