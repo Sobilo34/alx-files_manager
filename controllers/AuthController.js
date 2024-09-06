@@ -9,7 +9,7 @@ class AuthController {
     const { authorization } = request.headers;
 
     if (!authorization) {
-      response.status(401).json({ error: 'Unathorized' });
+      response.status(401).json({ error: 'Unauthorized' });
       return;
     }
 
@@ -39,20 +39,20 @@ class AuthController {
   static async getDisconnect(request, response) {
     const XToken = request.headers['x-token'];
     if (XToken === null) {
-      response.status(401).json({ error: 'Unathorized' });
+      response.status(401).json({ error: 'Unauthorized' });
       return;
     }
     const key = `auth_${XToken}`;
     const id = await redisClient.get(key);
     if (!id) {
-      response.status(401).json({ error: 'Unathorized' });
+      response.status(401).json({ error: 'Unauthorized' });
     } else {
       const user = await dbClient.db.collection('users').findOne({ _id: new ObjectId(id) });
       if (user) {
         await redisClient.del(key);
         response.status(204).json(null);
       } else {
-        response.status(401).json({ error: 'Unathorized' });
+        response.status(401).json({ error: 'Unauthorized' });
       }
     }
   }
