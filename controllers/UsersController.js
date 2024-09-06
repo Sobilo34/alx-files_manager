@@ -34,22 +34,22 @@ class users {
 
   static async getMe(request, response) {
     const XToken = request.headers['x-token'];
-    if (XToken === null) {
-      response.status(401).json({ error: 'Unathorized' });
+    if (!XToken) {
+      response.status(401).json({ error: 'Unauthorized' });
       return;
     }
     const key = `auth_${XToken}`;
     const id = await redisClient.get(key);
 
     if (!id) {
-      response.status(401).json({ error: 'Unathorized' });
+      response.status(401).json({ error: 'Unauthorized' });
     } else {
       const user = await dbClient.db.collection('users').findOne({ _id: new ObjectId(id) });
 
       if (user) {
         response.status(200).json({ id, email: user.email });
       } else {
-        response.status(401).json({ error: 'Unathorized' });
+        response.status(401).json({ error: 'Unauthorized' });
       }
     }
   }
